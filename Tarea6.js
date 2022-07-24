@@ -1,22 +1,48 @@
 const pokemonContainer = document.querySelector('.pokemon-container')
 
 function fetchPokemon(id) {
+  try {
     fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`)
-  .then(res => res.json())
-  .then(data => {
-    createPokemon(data);
-  });
-  
-}
-
-function fetchPokemons(number) {
-    for (let i = 1; i <= number; i++)  {
-      fetchPokemon(i);
+    .then(res => res.json())
+    .then(data => {
+      createPokemon(data);
+    });
+  } catch (err) {
+    alert(err.name);
+    alert(err.message);
+    alert(err.stack);
+  } finally {
+    console.log("Try n' Catch donde!!");
   }
+
+}
+
+function pokeLoad() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, 500);
+  });
+}
+
+async function fetchPokemons(number) {
+      for (let i = 1; i <= number; i++)  {
+        const result = await pokeLoad();
+        fetchPokemon(i);
+    }
+}
+
+function pokeLoad2() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('resolved');
+    }, 600);
+  });
 }
 
 
-function createPokemon(pokemon) {
+
+async function createPokemon(pokemon) {
   const card = document.createElement('div');
   card.classList.add('pokemon-block');
   
@@ -39,6 +65,8 @@ function createPokemon(pokemon) {
   card.appendChild(name);
 
   pokemonContainer.appendChild(card);
+
 }
+
 
 fetchPokemons(20);
